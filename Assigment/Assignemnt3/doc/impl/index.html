@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>IMPLEMENTATION DOCUMENTATION</title>
+</head>
+
+<body>
+
+
+
+<p style="color:red;font-size:22px"><b>IMPLEMENTATION DOCUMENTATION</b></p>
+
+<p>In this section i will speak to how i decide to organize the code.<br>
+My service is divided in three sub-packages ( this for flexibility to make future changes easier and also to understandability of code):<br><br>
+1)RESOURCE <br>
+2)SERVICE <br>
+3)DB <br>
+</p>
+<p style="color:red"><b>RESOURCE PACKAGE:</b></p>
+<p>In this package there are 3 classes:<br>
+<b>a)RnsResource:</b> that contains all the operation,resources and method allowed of the service<br>
+<b>b)XmlValidationProvider:</b> perform validation of request with xml body<br>
+<b>c)JsonValidationInterceptor:</b> perform validation of request with json body <br>
+</p>
+</p>
+<p style="color:red"><b>SERVICE PACKAGE:</b></p>
+<p>
+<b>a)RnsService:</b> contains the principal logic of the service<br>
+<b>b)RnsInit:</b> perform the initialization of the service; it reads places and connections and call the classes needed to load this info on the local DB and on neo4j<br>
+<b>c)RnsDeployer:</b> calls RnsInit at deploy time <br>
+<b>d)Neo4jServiceManager:</b> it is responsable of send request on Neo4j, for <b>FLEXIBILITY</b> reason i have done this class separated because in the future if want use a different
+service instead of Neo4J is enough to change this class and the rest of the code need only a little changes <br>
+</p>
+<p style="color:red"><b>DB PACKAGE:</b></p>
+<p>
+<b>a)RnsDB:</b> is the local db of the services, it load in main memory all information needed by the service and it is a SINGLETONE and then need synchronization<br>
+<b>b)Neo4jDB:</b> is the local DB with all information needed to contact the Neo4j service. It is a singletone and i decide to do this class separate for the same <b>FLEXIBILITY</b> reason<br>
+</p>
+<p>The system when deployed initialize the DB with all places and connections in the local Db and on Neo4j and this info remain fixed for all the lifecycle of the server. For this reason the operations on places more or less not need synchronization, while the operations on vehicles are dynamic and added dinamically on the local db and then need synchronization.
+
+<p style="color:red"><b>ASSUMPTIONS:</b></p>
+<p>
+1)When a vehicle try to change his state and is already in the state that request the change, the server accept the request.<br>
+2)A vehicle can request only a move of one position at a time (this because cannot do a move of more than one position because to move need to request a permission from the server).<br>
+3)A vehicle can move also if is in PARKED state, for semplicity (also if conceptually is more correct that can move only if is in IN_TRANSIT state). <br>
+4)For semplicity, also the maximum capacity of each place is not verified.<br>
+5)Connections are unidirectional. ( for example from P1 to P2 means that i can reach P2 from P1 but not viceversa).<br>
+6)When a vehicle send a request to exit from the system the server take as outPlace the current place,then if a vehicle want exit from a particular place it have to move to it before the exit request.<br>
+<p style="color:red"><b>NOT IMPLEMENTED ASPECTS:</b></p>
+1)Authentication of admClients and vehClients (for example there are two different operations for remove a vehicle and for a exit request).<br>
+2)Paging mechanism to reduce the size of messages.<br>
+3)Query parameters to reduce size of messages.<br>
+</p>
+<p><a href="../design/index.html">DESIGN DOCUMENTATION</a></p>
+<p><a href="../user/index.html">USER DOCUMENTATION</a>
+</body>
+</html>

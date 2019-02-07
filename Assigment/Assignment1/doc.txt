@@ -1,0 +1,14 @@
+
+1) In the xsd folder there is a file "schemaAss1A.xsd" with the diagram of my xml schema
+
+2) i have choose to put IdentifiedEntity as sub element of Place and Vehicle to respect the fact that both are an identifiedEntity and respect the unique identified constraint in the system
+
+3) to avoid redundancy origin/position/destination fields in vehicleType are keyref to place (placeId)
+
+4) place have an element choice between gate,parkingArea and roadSegment: in this way all this types have some common fields of places and some specialized fields
+
+5) connections are expressed with a isConnectedTo element in place. to avoid redundancy i have preferred to put only this field and not create another element connection (it will managed by the application)
+
+6) the constraint "roadSegmentName is unique within a road" is done by making unique the tuple <RoadName,RoadSegmentName> and his unique id is the identifiedEntity becuse is a place
+
+7) "At any time, each vehicle is in one place" can be retrived by the keyref in position field

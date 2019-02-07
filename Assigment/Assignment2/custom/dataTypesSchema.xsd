@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<!-- This element is used as body for the creation of a node in the graph -->
+	<xsd:element name="createNodeType">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="id" minOccurs="1" maxOccurs="1">
+					<xsd:simpleType >
+    					<xsd:restriction base="xsd:string">
+							<xsd:minLength value="1"/>
+    					</xsd:restriction>
+  				  	</xsd:simpleType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="nodes">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="node" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- This element is used for the response body after a creation of the node -->
+	<xsd:element name="node">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="metadata">
+					<xsd:complexType>
+						<xsd:sequence>
+						 	<xsd:element name="id" type="xsd:nonNegativeInteger"></xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="data">
+					<xsd:complexType>
+						<xsd:sequence>
+						 	<xsd:element name="id" type="xsd:string"></xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			    <xsd:element name="self" type="xsd:anyURI"></xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<!-- This element is used as body for the creation of a relationship in the graph -->
+	<xsd:element name="createRelationshipType">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="to" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="type" type="xsd:string" default="ConnnectedTo" minOccurs="1" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="relationships">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="relationship" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="relationship">
+		<xsd:complexType>
+			<xsd:sequence>
+			    <xsd:element name="self" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+			    <xsd:element name="start" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="end" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="metadata">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="id" type="xsd:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+							<xsd:element name="type" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="shortestPathsRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+			    <xsd:element name="to" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+			    <xsd:element name="algorithm" type="xsd:string" default="shortestPath" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="max_depth" type="xsd:positiveInteger" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="relationships">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="direction" type="xsd:string" default="out" minOccurs="1" maxOccurs="1"/>
+							<xsd:element name="type" type="xsd:string" default="ConnectedTo" minOccurs="1" maxOccurs="1"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="shortestPathsResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="shortPath" minOccurs="1" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	
+	<xsd:element name="shortPath">
+		<xsd:complexType>
+			<xsd:sequence>
+			    <xsd:element name="start" type="xsd:anyURI" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="length" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+				<xsd:element name="nodes" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	
+
+	
+</xsd:schema>

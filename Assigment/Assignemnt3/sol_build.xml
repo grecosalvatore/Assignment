@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="sol_build" default="build-service" basedir=".">
+	<description>
+		Script for building RNS Assignment 3
+	</description>
+	<property name="build.dir" location="${basedir}/build" />
+		<property name="src.dir" location="${basedir}/src" />
+		<property name="gen.dir" location="${basedir}/gen-src" />
+		<property name="lib.dir" location="${basedir}/lib" />
+		<property name="custom.dir" location="${basedir}/custom" />
+		<property name="xsd.dir" location="${basedir}/xsd" />
+		<property name="doc.dir" location="${basedir}/doc" />
+		<property name="web_content.dir" location="${basedir}/WebContent"/>
+		<property name="debug" value="true" />
+		<property name="debuglevel" value="source,lines,vars" />
+		<property name="target" value="1.8" />
+		<property name="source" value="1.8" />
+	
+	<!-- Declation of the the libray folder -->
+		<property name="shared.location" location="/opt/dp2/shared"/>
+		<property name="ext.lib.dir" location="${shared.location}/lib" />
+		
+		<!-- classpath Compile Solution -->
+		<path id="sol.classpath">
+			<fileset dir="${lib.dir}">
+			    <include name="*.jar" />
+				<include name="swagger-*.jar"/>
+			</fileset>
+			<fileset dir="${ext.lib.dir}">
+			    <include name="*.jar" />
+				<exclude name="ant-*.jar"/>
+			</fileset>
+		</path>
+
+	<!-- Target init -->
+	<target name="init">
+		<mkdir dir="${gen.dir}"/>
+		<mkdir dir="${build.dir}"/>
+	</target>
+
+
+	<!-- Target generate-bindings -->
+	<target name="generate-bindings">
+			<exec executable="xjc" failonerror="true" >
+				<arg value="-d" />
+				<arg value="${gen.dir}" />
+				<arg value="-p" />
+				<arg value="it.polito.dp2.RNS.sol3.jaxb.rnsSystem" />
+				<arg value="${xsd.dir}/RnsSystem.xsd" />
+			</exec>
+	</target>
+	
+	<!-- Target generate-artifacts for Neo4JSimpleXML -->
+	<target name="generate-artifacts">
+		<exec executable="xjc" failonerror="true" >
+			<arg value="-d" />
+			<arg value="${gen.dir}" />
+			<arg value="-p" />
+			<arg value="it.polito.dp2.RNS.sol3.jaxb.neo4j" />
+			<arg value="${xsd.dir}/Neo4jXML.xsd" />
+		</exec>
+	</target>
+	
+	<!-- Generate all the artifacts needed to build the client -->
+		<target name="generate-artifacts-for-client">
+
+			<echo>create a generate folder</echo>
+
+			<exec executable="xjc" failonerror="true" >
+				<arg value="-d" />
+				<arg value="${gen.dir}" />
+				<arg value="-p" />
+				<arg value="it.polito.dp2.RNS.sol3.jaxb.admClient" />
+				<arg value="${xsd.dir}/rnsInfo.xsd" />
+			</exec>
+			<touch file="${custom.dir}/.flagfile" />
+		</target>
+
+
+	<!-- Target build-service -->
+		<target name="build-service" depends="init,generate-artifacts,generate-bindings">
+			<echo>Building service...</echo>
+			<copy file="${xsd.dir}/RnsSystem.xsd" tofile="${web_content.dir}/WEB-INF/classes/xsd/RnsSystem.xsd"/>
+			<copy file="${xsd.dir}/Neo4jXML.xsd" tofile="${web_content.dir}/WEB-INF/classes/xsd/Neo4jXML.xsd"/>
+			<copy file="${custom.dir}/BadRequestBodyTemplate.html" tofile="${web_content.dir}/WEB-INF/classes/html/BadRequestBodyTemplate.html"/>
+			<javac destdir="${build.dir}" debug="${debug}" debuglevel="${debuglevel}" source="${source}" target="${target}" includeantruntime="false">
+				<src path="${src.dir}"/>
+				<src path="${gen.dir}"/>
+				<include name="it/polito/dp2/RNS/sol3/service/**" />
+				<include name="it/polito/dp2/RNS/sol3/jaxb/rnsSystem/**" />
+				<include name="it/polito/dp2/RNS/sol3/jaxb/Neo4j/**" />
+				<classpath>
+					<path refid="sol.classpath" />
+				</classpath>
+			</javac>
+			<echo>Done.</echo>
+		</target>
+	
+	<target name="build-client" depends="generate-bindings,generate-artifacts-for-client">
+			<echo message="Compiling admClient..."/>
+			<javac debug="on"
+				   fork="true"
+				   destdir="${build.dir}"
+				   includeantruntime="false"
+				   source="${source}"
+				   target="${target}">
+				<src path="${src.dir}"/>
+				<src path="${gen.dir}"/>
+				<include name="it/polito/dp2/RNS/sol3/admClient/**" />
+				<include name="it/polito/dp2/RNS/sol3/jaxb/rnsSystem/**" />
+				<include name="it/polito/dp2/RNS/sol3/jaxb/admClient/**" />
+				<classpath>
+					<path refid="sol.classpath"/>
+				</classpath>
+			</javac>
+			<echo message="Compiling vehClient..."/>
+			<javac debug="on"
+				   fork="true"
+				   destdir="${build.dir}"
+				   includeantruntime="false"
+				   source="${source}"
+				   target="${target}">
+				<src path="${src.dir}"/>
+				<src path="${gen.dir}"/>
+				<include name="it/polito/dp2/RNS/sol3/jaxb/rnsSystem/**" />
+				<include name="it/polito/dp2/RNS/sol3/vehClient/**" />
+				<classpath>
+					<path refid="sol.classpath"/>
+				</classpath>
+			</javac>
+		</target>
+</project>

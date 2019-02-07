@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:rns xmlns:tns="http://www.rnsInfo.it"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.rnsInfo.it rnsInfo.xsd">
+            
+      
+	<place capacity="15">
+		<identifiedEntity id="p1"/>
+		<gate>INOUT</gate>
+	</place>
+	
+	<place capacity="10">
+		<identifiedEntity id="p2"/>
+		<gate>IN</gate>
+	</place>
+	
+	<place capacity="10">
+		<identifiedEntity id="p3"/>
+		<gate>OUT</gate>
+	</place>
+	
+	<place capacity="5">
+		<identifiedEntity id="p4"/>
+		<parkingArea>
+			<service>vendingMachine</service>
+			<service>WC</service>
+		</parkingArea>
+	</place>
+	
+	<place capacity="5">
+		<identifiedEntity id="p8"/>
+		<parkingArea>
+			<service>vendingMachine</service>
+			<service>Telephone</service>
+		</parkingArea>
+	</place>
+	
+	
+	
+	<place capacity="50">
+		<identifiedEntity id="p5"/>
+		<roadSegment>
+			<name>rs1</name>
+			<roadName>road1</roadName>
+		</roadSegment>
+	</place>
+	
+	<place capacity="50">
+		<identifiedEntity id="p6"/>
+		<roadSegment>
+			<name>rs1</name>
+			<roadName>road2</roadName>
+		</roadSegment>
+	</place>
+	
+	<place capacity="50">
+		<identifiedEntity id="p7"/>
+		<roadSegment>
+			<name>rs2</name>
+			<roadName>road2</roadName>
+		</roadSegment>
+	</place>
+	
+
+	
+	
+	<vehicle vehicleState="IN_TRANSIT" vehicleType="CAR">
+		<identifiedEntity id="c1"/>
+		<origin>p1</origin>
+		<destination>p2</destination>
+		<position>p1</position>
+		<entryTime>2018-05-30T09:39:10+06:00</entryTime>
+	</vehicle>
+		
+	<vehicle vehicleState="IN_TRANSIT" vehicleType="CAR">
+		<identifiedEntity id="c2"/>
+		<origin>p2</origin>
+		<destination>p3</destination>
+		<position>p2</position>
+		<entryTime>2017-06-30T09:30:10+06:00</entryTime>
+	</vehicle>
+	
+	<vehicle vehicleState="PARKED" vehicleType="TRUCK">
+		<identifiedEntity id="c3"/>
+		<origin>p1</origin>
+		<destination>p3</destination>
+		<position>p2</position>
+		<entryTime>2017-07-30T09:30:10+06:00</entryTime>
+	</vehicle>
+	
+	<vehicle vehicleState="PARKED" vehicleType="SHUTTLE">
+		<identifiedEntity id="c4"/>
+		<origin>p1</origin>
+		<destination>p3</destination>
+		<position>p1</position>
+		<entryTime>2017-06-22T09:30:10+03:00</entryTime>
+	</vehicle>
+
+	<vehicle vehicleState="IN_TRANSIT" vehicleType="SHUTTLE">
+		<identifiedEntity id="c5"/>
+		<origin>p1</origin>
+		<destination>p5</destination>
+		<position>p4</position>
+		<entryTime>2018-06-22T09:30:10+03:00</entryTime>
+	</vehicle>
+	
+	<vehicle vehicleState="PARKED" vehicleType="CAR">
+		<identifiedEntity id="c6"/>
+		<origin>p3</origin>
+		<destination>p5</destination>
+		<position>p4</position>
+		<entryTime>2018-02-12T09:30:10+03:00</entryTime>
+	</vehicle>
+
+</tns:rns>

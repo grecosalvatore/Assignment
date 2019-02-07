@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	    targetNamespace="http://www.rnsInfo.it"
+	    xmlns:tns="http://www.rnsInfo.it"
+>
+    
+    <!--  RNS is the root element -->
+    <element name="rns" type="tns:rnsType">
+				
+		<!-- CONSTRAINTS -->
+		
+		<!-- LIST OF KEYS -->
+			<key name="vehicleKey">
+				<selector xpath="vehicle"/>
+				<field xpath="identifiedEntity/@id"/>
+			</key>
+		
+			<key name="placeKey">
+				<selector xpath="place"/>
+				<field xpath="identifiedEntity/@id"/>
+			</key>
+
+		<!-- END LIST OF KEYS -->
+		
+		
+		<!-- LIST OF KEYREFS -->
+		
+			<!-- KEYREF - place origin/destination/position of vehicles -->
+			<keyref name="originRef" refer="tns:placeKey">
+				<selector xpath="vehicle" />
+				<field xpath="origin" />
+			</keyref>
+			
+			<keyref name="destinationRef" refer="tns:placeKey">
+				<selector xpath="vehicle" />
+				<field xpath="destination" />
+			</keyref>
+		
+			<keyref name="positionRef" refer="tns:placeKey">
+				<selector xpath="vehicle" />
+				<field xpath="position" />
+			</keyref>
+				
+			<!-- KEYREF place isConnectedTo a place -->
+			<keyref name="connectionRef" refer="tns:placeKey">
+				<selector xpath="place" />
+				<field xpath="place/isConnectedTo" />
+			</keyref>
+			
+			<unique name="roadSegmentUniqueness">
+					<selector xpath="place/roadSegment"/>
+					<field xpath="name"/>
+					<field xpath="roadName"/>
+			</unique>
+		
+		<!-- END LIST OF KEYREFS -->
+	
+	</element>
+	
+ 
+	<!-- RNS TYPE - root element type --> 
+    <complexType name="rnsType">
+		<sequence>	
+			<element name="place" type="tns:placeType" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="vehicle" type="tns:vehicleType" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+	
+	
+	<!--  VEICHLE TYPE -->
+	<complexType name="vehicleType">
+		<sequence>	
+			<element name="identifiedEntity" type="tns:identifiedEntityType" minOccurs="1" maxOccurs="1"/>
+			<element name="origin" type="tns:idType" minOccurs="1" maxOccurs="1"/>
+			<element name="destination" type="tns:idType" minOccurs="1" maxOccurs="1"/>
+			<element name="position" type="tns:idType" minOccurs="1" maxOccurs="1"/>
+			<element name="entryTime" type="dateTime" minOccurs="1" maxOccurs="1"/>
+		</sequence>
+			<attribute name="vehicleType" type="tns:enumVehicleType" use="required" />
+			<attribute name="vehicleState" type="tns:enumVehicleState" use="required" />	
+	</complexType>
+	
+	
+	<!-- PLACE TYPE -->
+	<complexType name="placeType">			
+		<sequence>
+			<element name="identifiedEntity" type="tns:identifiedEntityType" minOccurs="1" maxOccurs="1"/>
+			<element name="isConnectedTo" type="tns:idType" minOccurs="0" maxOccurs="unbounded"/>
+			<choice>
+				<element name="roadSegment" type="tns:roadSegmentType"/>		
+				<element name="parkingArea" type="tns:parkingAreaType">
+					<!-- service must be unique inside the parking area  -->
+					<unique name="serviceUniqueness">
+						<selector xpath="service"/>
+						<field xpath="."/>
+					</unique>
+				</element>
+				<element name="gate" type="tns:gateType"/>
+			</choice>
+		</sequence>		
+		<attribute name="capacity" type="integer" use="required"/>		
+	</complexType>
+
+	
+	<!-- ROADSEGMENT TYPE -->
+	<complexType name="roadSegmentType">
+		<sequence>	
+			<element name="name" type="tns:idType" minOccurs="1" maxOccurs="1"/>
+			<element name="roadName" type="tns:idType" minOccurs="1" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+	
+	
+	<!-- the IDENTIFIED ENTITY is a single element with only an id-->
+	<complexType name="identifiedEntityType">	
+		<attribute name="id" type="ID" use="required"/>
+	</complexType>
+	
+	
+	<!-- ID are all string with at least one char and contains only alphanumeric characters -->  
+	<simpleType name="idType">
+    	<restriction base="string">
+			<minLength value="1"/>
+    	</restriction>
+    </simpleType>
+    
+    
+    <!-- parkingAreaType - contains a list of services (simple strings) -->
+    <complexType name="parkingAreaType">
+		<sequence>	
+			<element name="service" type="tns:idType" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+    
+    
+    <!-- enumeration of vehicle types -->
+	<simpleType name="enumVehicleType">
+     	<restriction base="string">
+   			<enumeration value="CAR"></enumeration>
+    		<enumeration value="TRUCK"></enumeration>
+    		<enumeration value="CARAVAN"></enumeration>
+			<enumeration value="SHUTTLE"></enumeration>
+    	</restriction>
+    </simpleType>
+    
+    
+    <!-- enumeration of vehicle states -->
+	<simpleType name="enumVehicleState">
+     	<restriction base="string">
+   			<enumeration value="PARKED"></enumeration>
+    		<enumeration value="IN_TRANSIT"></enumeration>
+    	</restriction>
+    </simpleType>
+	
+	
+	<!-- enumeration of gate types -->
+	<simpleType name="gateType">
+     	<restriction base="string">
+   			<enumeration value="in"></enumeration>
+    		<enumeration value="out"></enumeration>
+    		<enumeration value="inout"></enumeration>
+			<enumeration value="IN"></enumeration>
+			<enumeration value="OUT"></enumeration>
+			<enumeration value="INOUT"></enumeration>
+    	</restriction>
+    </simpleType>
+    
+</schema>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>DESIGN DOCUMENTATION</title>
+</head>
+
+<body>
+
+
+
+<p style="color:red;font-size:22px"><b>DESIGN DOCUMENTATION</b></p>
+
+<p>
+<ul>
+  <li><b>HATEOAS:</b> the client can follow all hyperlinks returned from the service. With a get on the entry point of the service (rns) the server return links to all main resources. The service, to all get operations and all returned resources, put a self field and some other link fields with the URI to all resources related to the returned response. For example if a client GET  vehicle from the server, in the response will be all links to its currentPosition,state and suggestedPath with who can do all possible operations and then don't need to create URIs.</li><br>
+  <li><b>INFORMATION HIDING:</b> The server in case of error return only the strictly necessary messages for the client to understand the reason of the error. In case of an internal sever error the server not give extra information about the specific problem to the client,but return only a generic internal server error. In case of others error the server exploit the HTTP status meaning and in some little case give also a message with the reason. For example if a client request a permission to change position the server can send with the HTTP status the reason why the permission is not granted. Moreover the server in case of validation error give some information about the fields that make the request not acceptable with xml and json validator. (with xml and json validator can improve also <b>perfomance</b> because invalid request are discovered as soon as possible and not valid request are not processd by the service).</li><br>
+  <li><b>IDEMPOTENT METHOD:</b> for the request of a vehicle to enter the system i prefer to use PUT (that is idempotent and in this case is used with the meanining of creation) because the client have to specify an identifier that is the plateId and i can use this id for the identification of the resource (instead of use a POST and let the server to decide the id).<br>The same for the change position request, i decide to use PUT on current position with the new position as request body (in this case i use put with the meaning of update).</li><br>
+<li><b>GRANULARITY LEVEL:</b> I decide to use as resource a vehicle or place and not every single field of this classes to reduce the number of interactions with the server, but i decide to create some resource for make easier frequent operation. For this purpose i create also the resources state,currentPosition and suggestedPath for the vehicle in order to have a good trade off between number of interactions and size of messages and at the same time make easier operation on that resource (like change position, change state...). For the place instead i create the resource currentVehicles to make easier the request to get all vehicle that are currently in a give position.</li><br>
+<li><b>STATELESS INTERACTIONS:</b> The  server don't keep information about the state of the interaction, is save only in the local DB the necessary informations as vehicles and their info.</li><br>	
+<li><b>SELF DOCUMENTATION:</b> The  server use self documentation as much as possible and exploit SWAGGER annotations to create a user documentation integrated with a schema and some examples of usage.</li><br>	
+<li><b>SIZE OF MESSAGES:</b> In the implementation of my server i not have implemented the <b>paging</b> mechanism and <b>query parameters</b> to filter the resources that a client want as response. But in design phase i have considered this things in the following way:<br> 
+<p>Link to full schema with paging <a href="fullSchema.xsd">fullSchemaLink</a></p>
+<p>from the schema is possible to notice that for all collections the server returns at most 25 objects and the page,the total number of pages and the link to next collections of objects. this is due to not have
+messages with a big size (in the implementation the server return all vehicles and all places because paging for semplicity is not implemented)</p>
+<p>Another aspect that i have thinked at design phase for decrease size of messages but that i have not implemented for semplicity in the server implementation is about the usage of query string to
+request only object with some conditions instead of return all objects.</p>
+<p>
+	<table style="width:95%" border="1" align="center">
+		<tr style="color:red">
+			<th>RESOURCE</th>
+			<th>METHOD</th>
+			<th>QUERY PARAMETER</th>
+			<th>RESPONSE BODY</th>
+			<th>MEANING</th>
+		</tr>
+		<tr>
+			<td>rns/places</td>
+			<td>GET</td>
+			<td>prefix:String</td>
+			<td>places</td>
+			<td>return all places that start with the prefix,if prefix is null return all places</td>
+		</tr>
+		<tr>
+			<td>rns/gates</td>
+			<td>GET</td>
+			<td>type:String (Enum IN,INOUT,OUT)</td>
+			<td>places</td>
+			<td>return all gates of the given type,if type is null return all gates</td>
+		</tr>
+		<tr>
+			<td>rns/roadSegments</td>
+			<td>GET</td>
+			<td>roadName:String </td>
+			<td>places</td>
+			<td>return all roadSegments belonging to a road, if roadName is null return all road segments</td>
+		</tr>
+		<tr>
+			<td>rns/parkingAreas</td>
+			<td>GET</td>
+			<td>services:List&#60String&#62</td>
+			<td>places</td>
+			<td>return all parkingAreas with at least all services selected,if services is empty or null return all parkingAreas</td>
+		</tr>
+		<tr>
+			<td>rns/vehicles</td>
+			<td>GET</td>
+			<td>since:Calendar</td>
+			<td>vehicles</td>
+			<td>return all vehicles that entered the system with a timestamp equal or higher then since, if since is null this filter is not applied</td>
+		</tr>
+		<tr>
+			<td>rns/vehicles</td>
+			<td>GET</td>
+			<td>vehicleType:String (Enum CARAVAN,CAR,SHUTTLE)</td>
+			<td>vehicles</td>
+			<td>return all vehicles of a given type, if type is null this filter is not applied</td>
+		</tr>
+		<tr>
+			<td>rns/vehicles</td>
+			<td>GET</td>
+			<td>state:String (Enum PARKED,IN_TRANSIT)</td>
+			<td>vehicles</td>
+			<td>return all vehicles of a given state, if state is null this filter is not applied</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>the query string on vehicles can be used in composition or if one is null it is not applied</td>
+		</tr>
+		<tr>
+			<td>rns/places/{id}/currentVehicles</td>
+			<td>GET</td>
+			<td>representation:String (Enum: FULL,LINKED)</td>
+			<td>vehicles</td>
+			<td>if representation is FULL the vehicles returned have all informations,if insted is LINKED the vehicles returned have only the link to the resource
+				DEFAULT:LINKED</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>In addition, also the other query parameters for the rns/vehicles resource can be applied in combination with representation query string</td>
+		</tr>
+		<tr>
+			<td>rns/places/{id}/connectedTo</td>
+			<td>GET</td>
+			<td>representation:String (Enum: FULL,LINKED)</td>
+			<td>places</td>
+			<td>if representation is FULL the places returned have all informations,if insted is LINKED the places returned have only the link to the resource
+				DEFAULT:LINKED</td>
+		</tr>
+		<tr>
+			<td>rns/places/{id}/connectedTo</td>
+			<td>GET</td>
+			<td>type:List&#60String&#62 (Enum: GATE,ROADSEGMENT,PARKINGAREA)</td>
+			<td>places</td>
+			<td>return the places of the given types connected to the place={id}, is the list is empty or null return all places connected to place={id}</td>
+		</tr>
+	</table>
+ </p>
+</li><br>
+</ul>
+</p>
+<p>In the implementation i used a simplified version of the schema without paging  <a href="../../xsd/RnsSystem.xsd">SimpleSchemaLink</a></p>
+<p>A better explaination of all resources with they hierarchical structure and operations allowed are explained in the <a href="../user/index.html">USER DOCUMENTATION</a></p>
+<p>A better explaination of organization classes of the project is in the <a href="../impl/index.html">IMPLEMENTATION DOCUMENTATION</a></p>
+
+</body>
+</html>

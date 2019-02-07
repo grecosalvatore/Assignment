@@ -1,0 +1,144 @@
+<description>
+
+<!--example of get link to main resources (HATEOAS)-->
+	<!-- REQUEST: GET on http://localhost:8080/RnsSystem/rest/rns/ -->
+	<!-- this is the entry point of the webservice-->
+
+	<!-- RESPONSE -->
+	<rns>
+	    <self>http://localhost:8080/RnsSystem/rest/rns/</self>
+	    <vehicles>http://localhost:8080/RnsSystem/rest/rns/vehicles</vehicles> <!-- with a GET on that resources can read this info from the system -->
+	    <places>http://localhost:8080/RnsSystem/rest/rns/places</places> <!-- with a GET on that resources can read this info from the system -->
+	    <gates>http://localhost:8080/RnsSystem/rest/rns/places/gates</gates> <!-- with a GET on that resources can read this info from the system -->
+	    <roadSegments>http://localhost:8080/RnsSystem/rest/rns/places/roadSegments</roadSegments> <!-- with a GET on that resources can read this info from the system -->
+	    <parkingAreas>http://localhost:8080/RnsSystem/rest/rns/places/parkingAreas</parkingAreas> <!-- with a GET on that resources can read this info from the system -->
+	    <connections>http://localhost:8080/RnsSystem/rest/rns/connections</connections> <!-- with a GET on that resources can read this info from the system -->
+	</rns>
+<!-- 			END example			-->
+
+
+<!--example of enter vehicle request-->
+	<!-- REQUEST: PUT on  http://localhost:8080/RnsSystem/rest/rns/vehicles/v1 --> 
+	<vehicle>
+		<plateId>v1</plateId>
+		<vehicleType>CAR</vehicleType>
+		<origin>Gate0</origin>
+		<destination>Gate1</destination>
+	</vehicle>
+
+	<!--RESPONSE example : suggestedPath -->
+	<suggestedPath>
+	    <self>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/suggestedPath</self>
+	    <vehicle>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1</vehicle>
+	    <start>http://localhost:8080/RnsSystem/rest/rns/places/Gate0</start>
+	    <startId>Gate0</startId>
+	    <end>http://localhost:8080/RnsSystem/rest/rns/places/Gate1</end>
+	    <endId>Gate1</endId>
+	    <currentPositionLink>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/currentPosition</currentPositionLink>
+	    <path>
+		<palceId>Gate0</palceId>
+		<placeLink>http://localhost:8080/RnsSystem/rest/rns/places/Gate0</placeLink>
+	    </path>
+	    <path>
+		<palceId>SP0-S0</palceId>
+		<placeLink>http://localhost:8080/RnsSystem/rest/rns/places/SP0-S0</placeLink>
+	    </path>
+	    <path>
+		<palceId>SP0-S1</palceId>
+		<placeLink>http://localhost:8080/RnsSystem/rest/rns/places/SP0-S1</placeLink>
+	    </path>
+	    <path>
+		<palceId>Gate1</palceId>
+		<placeLink>http://localhost:8080/RnsSystem/rest/rns/places/Gate1</placeLink>
+	    </path>
+	</suggestedPath>
+<!-- 			END example			-->
+
+
+
+<!--example of get vehicle -->
+	<!-- REQUEST: GET on  http://localhost:8080/RnsSystem/rest/rns/vehicles/v1 --> 
+	<vehicle>
+	    <self>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1</self>
+	    <plateId>v1</plateId>
+	    <state>
+		<self>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/state</self>
+		<VehicleState>IN_TRANSIT</VehicleState>
+	    </state>
+	    <vehicleType>CAR</vehicleType>
+	    <origin>Gate0</origin>
+	    <originLink>http://localhost:8080/RnsSystem/rest/rns/places/Gate1</originLink>
+	    <destination>Gate1</destination>
+	    <destinationLink>http://localhost:8080/RnsSystem/rest/rns/places/Gate0</destinationLink>
+	    <position>
+		<placeId>Gate0</placeId>
+	    </position>
+	    <entryTime>2019-01-16T16:21:13.910+01:00</entryTime>
+	    <suggestedPathLink>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/suggestedPath</suggestedPathLink>  <!-- HATEOAS -> link to all resources related to the vehicle-->
+	    <deleteVehicleLink>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1</deleteVehicleLink>  <!-- HATEOAS -> link to all resources related to the vehicle-->
+	    <changeStateLink>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/state</changeStateLink>  <!-- HATEOAS -> link to all resources related to the vehicle-->
+	    <currentPositionLink>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/currentPosition</currentPositionLink>  <!-- HATEOAS -> link to all resources related to the vehicle-->
+	</vehicle>
+<!-- 			END example			-->
+
+
+
+
+<!--example of change position request-->
+	<!-- REQUEST: PUT on  http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/currentPosition --> 
+	<position>
+		<placeId>SP0-S0</placeId>
+	</position>
+
+	<!-- the sesponse is a suggestedPath if the new position is in the old suggested path return the old suggestePath otherwise a new suggested path is computed. if the destination
+	     is not reachable from the new position the suggestedPath returned have an empty path	-->
+	<!-- EXAMPLE: new position is in the suggested path response -> the old suggested path is returned -->
+		<suggestedPath>
+	    <self>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/suggestedPath</self>
+	    <vehicle>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1</vehicle>
+	    <start>http://localhost:8080/RnsSystem/rest/rns/places/Gate0</start>
+	    <startId>Gate0</startId>
+	    <end>http://localhost:8080/RnsSystem/rest/rns/places/Gate1</end>
+	    <endId>Gate1</endId>
+	    <currentPositionLink>http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/currentPosition</currentPositionLink>
+	    <path>
+		<palceId>Gate0</palceId>
+		<placeLink>http://localhost:8080/RnsSystem/rest/rns/places/Gate0</placeLink>
+	    </path>
+	    <path>
+		<palceId>SP0-S0</palceId>
+		<placeLink>http://localhost:8080/RnsSystem/rest/rns/places/SP0-S0</placeLink>
+	    </path>
+	    <path>
+		<palceId>SP0-S1</palceId>
+		<placeLink>http://localhost:8080/RnsSystem/rest/rns/places/SP0-S1</placeLink>
+	    </path>
+	    <path>
+		<palceId>Gate1</palceId>
+		<placeLink>http://localhost:8080/RnsSystem/rest/rns/places/Gate1</placeLink>
+	    </path>
+	</suggestedPath>
+<!-- 			END example			-->
+
+
+
+
+<!--example of change state request-->
+	<!-- REQUEST: PUT on  http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/state --> 
+	<state>
+		<VehicleState>PARKED</VehicleState>
+	</state>
+	<!--RESPONSE in case of success -->
+	<state>
+	    <self>http://localhost:8080/RnsSystem/rest/rns/vehicles/v2/state</self>
+	    <VehicleState>PARKED</VehicleState>
+	</state>
+<!-- 			END example			-->
+
+
+<!--example of exit vehicle request (for vehicle client)-->
+	<!-- REQUEST: DELETE on  http://localhost:8080/RnsSystem/rest/rns/vehicles/v1/currentPosition --> 
+
+<!--example of remove vehicle (for administrator client)-->
+	<!-- REQUEST: DELETE on  http://localhost:8080/RnsSystem/rest/rns/vehicles/v1 --> 
+</description>	

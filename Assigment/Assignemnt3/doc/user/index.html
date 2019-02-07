@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>USER DOCUMENTATION</title>
+</head>
+
+<body>
+
+
+</html>
+<p style="color:red;font-size:22px"><b>USER DOCUMENTATION</b></p>
+
+<p>Link to the <a href="http://localhost:8080/RnsSystem/_swagger-ui/index.html?url=http://localhost:8080/RnsSystem/rest/swagger.json#/">Swagger documentation</a></p>
+<p>Link to examples of usage of the service <a href="examples.xml">Examples</a></p>
+<p>Link to  <a href="resourcesHierarchy.pdf">Resources hierarchy</a></p>
+<p>Link to  <a href="RnsSystem.xsd">data types schema</a></p>
+<p style="color:red;font-size:22px">RESOURCE ORGANIZATION</p>
+<p>
+</p>
+
+<p><table style="width:95%" border="1" align="center">
+  <tr style="color:red" >
+	<th>RESOURCE</th>
+	<th>VERB</th> 
+	<th>REQUEST BODY</th>
+	<th>STATUS</th>
+	<th>RESPONSE BODY</th> 
+	<th>MEANING</th>
+  </tr>
+  <tr>
+	<td>rns</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">Rns</td> 
+	<td>Return link to all main resources in the sytem (Entry Point of the System)</td>
+  </tr>
+<tr>
+	<td>rns/places</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">Places</td> 
+	<td>List of places in the system</td>
+  </tr>
+<tr>
+	<td>rns/places/roadSegments</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">Places</td> 
+	<td>List of road segments in the system</td>
+  </tr>
+<tr>
+	<td>rns/places/parkingAreas</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">Places</td> 
+	<td>List of parking areas in the system</td>
+  </tr>
+<tr>
+	<td>rns/places/gates</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">Places</td> 
+	<td>List of gates in the system</td>
+  </tr>
+
+<tr>
+	<td>rns/places/{id}</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">Place</td> 
+	<td>Read place with placeId={id} (can be every type of place)</td>
+  </tr>
+<tr border:0>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The place is not in the system</td>
+  </tr>
+<tr>
+	<td>rns /places/{id}/currentVehicles</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">Vehicles</td> 
+	<td>Read the set of vehicles that are now in the selected place</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The place is not in the system</td>
+  </tr>
+
+<tr>
+	<td>rns/vehicles</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">Vehicles</td> 
+	<td>Read the set of all vehicles in the system</td>
+  </tr>
+<tr>
+	<td>rns/vehicles/{id}</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">vehicle</td> 
+	<td>Read single vehicle with plateId={id}</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The vehicle is not in the system</td>
+  </tr>
+<tr>
+	<td>rns/vehicles/{id}</td>
+	<td style="text-align:center">PUT</td> 
+	<td style="text-align:center">vehicle</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">suggestedPath</td> 
+	<td>Permission granted for the vehicle with plateId={id} to enter the system, the suggested path is returned</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">400 Bad Request</td>
+	<td style="text-align:center">-</td> 
+	<td>Permission not granted - origin or destiation are not in the system or validation of request body error</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">403 Forbidden</td>
+	<td style="text-align:center">-</td> 
+	<td>Permission not granted - Origin is not an IN/OUT gate or the vehicle is already in the system</td>
+  </tr>
+<tr>
+	<td>rns/vehicles/{id}</td>
+	<td style="text-align:center">DELETE</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">-</td> 
+	<td>Administrator succesfully remove the vehicle from the system</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">403 Forbidden</td>
+	<td style="text-align:center">-</td> 
+	<td>Only administrator can delete vehicle from the system (NOT IMPLEMENTED)</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The vehicle is not in the system</td>
+  </tr>
+<tr>
+	<td>rns/vehicles/{id}/currentPosition</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">position</td> 
+	<td>Read information about current position for the {id} vehicle</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The vehicle is not in the system</td>
+  </tr>
+<tr>
+	<td>rns/vehicles/{id}/currentPosition</td>
+	<td style="text-align:center">PUT</td> 
+	<td style="text-align:center">position</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">suggestedPath</td> 
+	<td>Permission granted to change position (in the request) for the {id} vehicle and the suggestedPath is returned</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">400 Bad Request</td>
+	<td style="text-align:center">-</td> 
+	<td>Permission not granted - Valildation error or new position is not in the system</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">403 Forbidden</td>
+	<td style="text-align:center">-</td> 
+	<td>Permission not granted - New position is not reachable from current position</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The vehicle is not in the system</td>
+  </tr>
+<tr>
+	<td>rns/vehicles/{id}/currentPosition</td>
+	<td style="text-align:center">DELETE</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">-</td> 
+	<td>Permission granted for the vehicle to exit the system from this current position</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">403 Forbidden</td>
+	<td style="text-align:center">-</td> 
+	<td>Permission not granted - current position is not OUT/INOUT gate</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The vehicle is not in the system</td>
+  </tr>
+
+<tr>
+	<td>rns/vehicles/{id}/state</td>
+	<td style="text-align:center">GET</td> 
+	<td>-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">state</td> 
+	<td>Read current state of the vehicle</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The vehicle is not in the system</td>
+  </tr>
+<tr>
+	<td>rns/vehicles/{id}/state</td>
+	<td style="text-align:center">PUT</td> 
+	<td style="text-align:center">state</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">state</td> 
+	<td>Vehicle succesfully changed the state</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">400 Bad Request</td>
+	<td style="text-align:center">-</td> 
+	<td>Body validation error</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td style="text-align:center">-</td> 
+	<td>The vehicle is not in the system</td>
+  </tr>
+<tr>
+	<td>rns/vehicles/{id}/state</td>
+	<td style="text-align:center">GET</td> 
+	<td style="text-align:center">-</td>
+	<td style="text-align:center">200 OK</td>
+	<td style="text-align:center">suggestedPath</td> 
+	<td>Read the suggestedPath for the vehicle</td>
+  </tr>
+<tr>
+	<td></td>
+	<td></td> 
+	<td></td>
+	<td style="text-align:center">404 Not Found</td>
+	<td>-</td> 
+	<td>The vehicle is not in the system</td>
+  </tr>
+
+
+
+</table></p>
+
+</body>
